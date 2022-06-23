@@ -6,6 +6,36 @@ import numpy as np
 import pygame_menu
 import random
 
+####################				CONSTANTS AND GLOBAL VARIABLES				####################
+ROWS = 6
+COLS = 7
+
+BLUE = (0,0,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+YELLOW = (255,255,0)
+
+PLAYER = 0
+AI = 1
+
+EMPTY = 0
+PLAYER_PIECE = 1
+AI_PIECE = 2
+
+WINDOW_LENGTH = 4
+
+SQUARESIZE = 100
+
+width = COLS * SQUARESIZE
+height = (ROWS+1) * SQUARESIZE
+
+size = (width, height)
+
+RADIUS = int(SQUARESIZE/2 - 5)
+
+DIFFICULTY = [0]
+
+####################				AI - ALGORITHM MINIMA				####################
 def evaluate_window(window, piece):
 	score = 0
 	opp_piece = PLAYER_PIECE
@@ -115,7 +145,6 @@ def get_valid_locations(board):
 	return valid_locations
 
 def pick_best_move(board, piece):
-
 	valid_locations = get_valid_locations(board)
 	best_score = -10000
 	best_col = random.choice(valid_locations)
@@ -130,34 +159,8 @@ def pick_best_move(board, piece):
 
 	return best_col
 
-ROWS = 6
-COLS = 7
 
-BLUE = (0,0,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-YELLOW = (255,255,0)
-
-
-PLAYER = 0
-AI = 1
-
-EMPTY = 0
-PLAYER_PIECE = 1
-AI_PIECE = 2
-
-WINDOW_LENGTH = 4
-
-
-SQUARESIZE = 100
-
-width = COLS * SQUARESIZE
-height = (ROWS+1) * SQUARESIZE
-
-size = (width, height)
-
-RADIUS = int(SQUARESIZE/2 - 5)
-
+####################				FUNCTIONS FOR THE BASIC GAME				####################
 def valid_location(board, col):
     '''Return True if the column is valid to play'''
     #print(col)
@@ -179,28 +182,28 @@ def check_victory(board, piece):
     #Check victory in all the rows
     for r in range(ROWS):
         for c in range(COLS-3):
-            if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r][c+1]), np.logical_and(board[r][c] == board[r][c+2], board[r][c] == board[r][c+3]) ):
-            #if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
+            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r][c+1]), np.logical_and(board[r][c] == board[r][c+2], board[r][c] == board[r][c+3]) ):
+            if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
                 return True
 
     #Check victory in all the cols
     for r in range(ROWS-3):
         for c in range(COLS):
-             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c]), np.logical_and(board[r][c] == board[r+2][c], board[r][c] == board[r+3][c]) ):
-            #if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
+            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c]), np.logical_and(board[r][c] == board[r+2][c], board[r][c] == board[r+3][c]) ):
+            if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
                 return True
 
     #Check diagonals
     for r in range(ROWS-3):
         for c in range(COLS-3):
-             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c+1]), np.logical_and(board[r][c] == board[r+2][c+2], board[r][c] == board[r+3][c+3]) ):
-            #if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
+            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c+1]), np.logical_and(board[r][c] == board[r+2][c+2], board[r][c] == board[r+3][c+3]) ):
+            if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
                 return True
     
     for r in range(3, ROWS):
         for c in range(COLS-3):
-             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r-1][c+1]), np.logical_and(board[r][c] == board[r-2][c+2], board[r][c] == board[r-3][c+3]) ):
-            #if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
+            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r-1][c+1]), np.logical_and(board[r][c] == board[r-2][c+2], board[r][c] == board[r-3][c+3]) ):
+            if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
                 return True
 
     return False 
@@ -244,7 +247,7 @@ class Game:
 			row = row_empty(self.board, column)
 			play(self.board, row, column, player)
 			if check_victory(self.board, player):
-				self.game_over = True
+				self.gameOver = True
 				label = self.font.render(f"Player {player} wins!!", 1, color)
 				self.screen.blit(label, (40, 10))
 
@@ -268,8 +271,10 @@ class Game:
 
 					else:
 						self.dropPiece(AI_PIECE, col, YELLOW)
+			if self.gameOver:
+				pygame.time.wait(5000)
 		
-	def runGameAI(self):
+	def runGameAI(self, difficulty):
 		while not self.gameOver:
 
 			for event in pygame.event.get():
@@ -299,34 +304,41 @@ class Game:
 
 				#col = random.randint(0, COLUMN_COUNT-1)
 				#col = pick_best_move(board, AI_PIECE)
-				col, minimax_score = minimax(self.board, 5, -math.inf, math.inf, True)
+				print(difficulty)
+				col, minimax_score = minimax(self.board, difficulty, -math.inf, math.inf, True)
 
 				self.dropPiece(AI_PIECE, col, YELLOW)
 
 			if self.gameOver:
-				pygame.time.wait(3000)
+				pygame.time.wait(5000)
 			
 
 
-
+####################				MENU				####################
 pygame.init()
-surface = pygame.display.set_mode((600, 400))
+surface = pygame.display.set_mode((700, 700))
 def set_difficulty(value, difficulty):
-    pass
+    DIFFICULTY[0] = difficulty
 
-def start_game():
+def start_game_ai():
 	surface.fill("black")
 	game = Game()
-	game.runGameAI()
+	game.runGameAI(DIFFICULTY[0])
+	menu.mainloop(surface)
+
+def start_game_friend():
+	surface.fill("black")
+	game = Game()
+	game.runGame()
+	menu.mainloop(surface)
 
 
-menu = pygame_menu.Menu('Welcome', 600, 400,
-                       theme=pygame_menu.themes.THEME_BLUE)
+menu = pygame_menu.Menu('Welcome', 700, 700, theme=pygame_menu.themes.THEME_BLUE)
 
 menu.add.text_input('Name: ', default='Monkey')
-menu.add.selector('Difficulty: ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
-menu.add.button('Play vs AI', start_game)
-menu.add.button('Play vs Friend', start_game)
+menu.add.selector('Difficulty: ', [('Hard', 6), ('Easy', 3)], onchange=set_difficulty)
+menu.add.button('Play vs AI', start_game_ai)
+menu.add.button('Play vs Friend', start_game_friend)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 
 menu.mainloop(surface)
