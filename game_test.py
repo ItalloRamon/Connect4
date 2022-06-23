@@ -14,12 +14,12 @@ def evaluate_window(window, piece):
 
 	if window.count(piece) == 4:
 		score += 100
-	elif window.count(piece) == 3 and window.count(EMPTY) == 1:
+	elif np.logical_and(window.count(piece) == 3, window.count(EMPTY) == 1):
 		score += 5
-	elif window.count(piece) == 2 and window.count(EMPTY) == 2:
+	elif np.logical_and(window.count(piece) == 2, window.count(EMPTY) == 2):
 		score += 2
 
-	if window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
+	if np.logical_and(window.count(opp_piece) == 3, window.count(EMPTY) == 1):
 		score -= 4
 
 	return score
@@ -179,24 +179,28 @@ def check_victory(board, piece):
     #Check victory in all the rows
     for r in range(ROWS):
         for c in range(COLS-3):
-            if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
+            if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r][c+1]), np.logical_and(board[r][c] == board[r][c+2], board[r][c] == board[r][c+3]) ):
+            #if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
                 return True
 
     #Check victory in all the cols
     for r in range(ROWS-3):
         for c in range(COLS):
-            if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
+             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c]), np.logical_and(board[r][c] == board[r+2][c], board[r][c] == board[r+3][c]) ):
+            #if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
                 return True
 
     #Check diagonals
     for r in range(ROWS-3):
         for c in range(COLS-3):
-            if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
+             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c+1]), np.logical_and(board[r][c] == board[r+2][c+2], board[r][c] == board[r+3][c+3]) ):
+            #if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
                 return True
     
     for r in range(3, ROWS):
         for c in range(COLS-3):
-            if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
+             if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r-1][c+1]), np.logical_and(board[r][c] == board[r-2][c+2], board[r][c] == board[r-3][c+3]) ):
+            #if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
                 return True
 
     return False 
