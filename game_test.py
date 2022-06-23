@@ -160,8 +160,8 @@ RADIUS = int(SQUARESIZE/2 - 5)
 
 def valid_location(board, col):
     '''Return True if the column is valid to play'''
-    print(col)
-    print(f"{board[0][col]} Verificando")
+    #print(col)
+    #print(f"{board[0][col]} Verificando")
     if board[0][col] == 0:
         return True
     return False
@@ -194,9 +194,9 @@ def check_victory(board, piece):
             if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
                 return True
     
-    for r in range(ROWS-3):
+    for r in range(3, ROWS):
         for c in range(COLS-3):
-            if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
+            if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
                 return True
 
     return False 
