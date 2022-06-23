@@ -12,9 +12,10 @@ COLS = 7
 
 BLUE = (0,0,255)
 BLACK = (0,0,0)
-RED = (255,0,0)
-YELLOW = (255,255,0)
-
+LAWNGRENN = (124,252,0)
+DEEPPINK = (255,20,147)
+WHITE = (255, 255, 255)
+THISTLE = (216,191,216)
 PLAYER = 0
 AI = 1
 
@@ -33,7 +34,7 @@ size = (width, height)
 
 RADIUS = int(SQUARESIZE/2 - 5)
 
-DIFFICULTY = [0]
+DIFFICULTY = [5]
 
 ####################				AI - ALGORITHM MINIMA				####################
 def evaluate_window(window, piece):
@@ -217,6 +218,7 @@ class Game:
 		self.board = np.zeros((ROWS,COLS))
 		pygame.init()
 		self.screen = pygame.display.set_mode(size)
+		self.screen.fill("white")
 		self.font = pygame.font.SysFont("monospace", 75)
 		self.gameOver = False
 		self.drawBoard()
@@ -228,16 +230,16 @@ class Game:
 	def drawBoard(self):
 		for r in range(ROWS):
 			for c in range(COLS):
-				pygame.draw.rect(self.screen, BLUE, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
+				pygame.draw.rect(self.screen, THISTLE, (c*SQUARESIZE, r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
 				# Player chip
 				if self.board[r, c] == PLAYER_PIECE:
-					pygame.draw.circle(self.screen, RED, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+					pygame.draw.circle(self.screen, LAWNGRENN, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
 				# AI chip
 				elif self.board[r, c] == AI_PIECE:
-					pygame.draw.circle(self.screen, YELLOW, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+					pygame.draw.circle(self.screen, DEEPPINK, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
 				# Empty spot
 				else:
-					pygame.draw.circle(self.screen, BLACK, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+					pygame.draw.circle(self.screen, WHITE, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
 
 		pygame.display.update()
 
@@ -267,10 +269,10 @@ class Game:
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					col = int(math.floor(event.pos[0] / SQUARESIZE))
 					if self.turn == PLAYER:
-						self.dropPiece(PLAYER_PIECE, col, RED)
+						self.dropPiece(PLAYER_PIECE, col, LAWNGRENN)
 
 					else:
-						self.dropPiece(AI_PIECE, col, YELLOW)
+						self.dropPiece(AI_PIECE, col, DEEPPINK)
 			if self.gameOver:
 				pygame.time.wait(5000)
 		
@@ -282,22 +284,22 @@ class Game:
 					sys.exit()
 
 				if event.type == pygame.MOUSEMOTION:
-					pygame.draw.rect(self.screen, BLACK, (0,0, width, SQUARESIZE))
+					pygame.draw.rect(self.screen, WHITE, (0,0, width, SQUARESIZE))
 					posx = event.pos[0]
 					if self.turn == PLAYER:
-						pygame.draw.circle(self.screen, RED, (posx, int(SQUARESIZE/2)), RADIUS)
+						pygame.draw.circle(self.screen, LAWNGRENN, (posx, int(SQUARESIZE/2)), RADIUS)
 
 				pygame.display.update()
 
 				if event.type == pygame.MOUSEBUTTONDOWN:
-					pygame.draw.rect(self.screen, BLACK, (0,0, width, SQUARESIZE))
+					pygame.draw.rect(self.screen, WHITE, (0,0, width, SQUARESIZE))
 					#print(event.pos)
 					# Ask for Player 1 Input
 					if self.turn == PLAYER:
 						posx = event.pos[0]
 						col = int(math.floor(posx/SQUARESIZE))
 
-						self.dropPiece(PLAYER_PIECE, col, RED)
+						self.dropPiece(PLAYER_PIECE, col, LAWNGRENN)
 
 			# # Ask for Player 2 Input
 			if self.turn == AI and not self.gameOver:				
@@ -307,7 +309,7 @@ class Game:
 				print(difficulty)
 				col, minimax_score = minimax(self.board, difficulty, -math.inf, math.inf, True)
 
-				self.dropPiece(AI_PIECE, col, YELLOW)
+				self.dropPiece(AI_PIECE, col, DEEPPINK)
 
 			if self.gameOver:
 				pygame.time.wait(5000)
@@ -336,7 +338,7 @@ def start_game_friend():
 menu = pygame_menu.Menu('Welcome', 700, 700, theme=pygame_menu.themes.THEME_BLUE)
 
 menu.add.text_input('Name: ', default='Monkey')
-menu.add.selector('Difficulty: ', [('Hard', 6), ('Easy', 3)], onchange=set_difficulty)
+menu.add.selector('Difficulty: ', [('Normal', 5), ('Hard', 7)], onchange=set_difficulty)
 menu.add.button('Play vs AI', start_game_ai)
 menu.add.button('Play vs Friend', start_game_friend)
 menu.add.button('Quit', pygame_menu.events.EXIT)
