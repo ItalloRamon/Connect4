@@ -32,27 +32,23 @@ def check_victory(board, piece):
     #Check victory in all the rows
     for r in range(ROWS):
         for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r][c+1]), np.logical_and(board[r][c] == board[r][c+2], board[r][c] == board[r][c+3]) ):
             if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
                 return True
 
     #Check victory in all the cols
     for r in range(ROWS-3):
         for c in range(COLS):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c]), np.logical_and(board[r][c] == board[r+2][c], board[r][c] == board[r+3][c]) ):
             if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
                 return True
 
     #Check diagonals
     for r in range(ROWS-3):
         for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c+1]), np.logical_and(board[r][c] == board[r+2][c+2], board[r][c] == board[r+3][c+3]) ):
             if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
                 return True
     
     for r in range(3, ROWS):
         for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r-1][c+1]), np.logical_and(board[r][c] == board[r-2][c+2], board[r][c] == board[r-3][c+3]) ):
             if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
                 return True
 
@@ -186,8 +182,6 @@ def pick_best_move(board, piece):
 board = create_board()
 
 game_over = False
-turn = 0
-
 while not game_over:
 
 	finish = input("Would you like to know the best move for the PLAYER1? ")
@@ -198,8 +192,6 @@ while not game_over:
 	choice = int(input("PLAYER 1 -> Select a column to play (1-7): "))
 	choice -= 1
 	
-
-	# print(valid_location(board, choice))
 	if valid_location(board, choice):
 		row = row_empty(board, choice)
 		play(board, row, choice, 1)
@@ -220,10 +212,8 @@ while not game_over:
 	choice -= 1
 	
 
-	# print(valid_location(board, choice))
 	if valid_location(board, choice):
 		row = row_empty(board, choice)
-		# print(row)
 		play(board, row, choice, 2)
 		print(board)
 
@@ -231,8 +221,3 @@ while not game_over:
 		game_over = True
 		print("PLAYER 2 WINS!!!")
 		break
-
-		
-
-	
-	
