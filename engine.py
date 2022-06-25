@@ -178,46 +178,46 @@ def pick_best_move(board, piece):
 	return best_col
 
 
+if __name__ == '__main__':
+    board = create_board()
 
-board = create_board()
+    game_over = False
+    while not game_over:
 
-game_over = False
-while not game_over:
-
-	finish = input("Would you like to know the best move for the PLAYER1? ")
-	if finish in 'Yy':
-		col, minimax_score = minimax(board, 7, -math.inf, math.inf, False)
-		print(f"The best column to you play is {col+1}")
-		
-	choice = int(input("PLAYER 1 -> Select a column to play (1-7): "))
-	choice -= 1
-	
-	if valid_location(board, choice):
-		row = row_empty(board, choice)
-		play(board, row, choice, 1)
-		print(board)
-	
-	if check_victory(board, 1):
-		game_over = True
-		print("PLAYER 1 WINS!!!")
-		break
+        finish = input("Would you like to know the best move for the PLAYER1? ")
+        if finish in 'Yy':
+            col, minimax_score = minimax(board, 7, -math.inf, math.inf, False)
+            print(f"The best column to you play is {col+1}")
+            
+        choice = int(input("PLAYER 1 -> Select a column to play (1-7): "))
+        choice -= 1
+        
+        if valid_location(board, choice):
+            row = row_empty(board, choice)
+            play(board, row, choice, 1)
+            print(board)
+        
+        if check_victory(board, 1):
+            game_over = True
+            print("PLAYER 1 WINS!!!")
+            break
 
 
-	finish = input("Would you like to know the best move for the PLAYER2? ")
-	if finish in 'Yy':
-		col, minimax_score = minimax(board, 7, -math.inf, math.inf, True)
-		print(f"The best column to you play is {col+1}")
+        finish = input("Would you like to know the best move for the PLAYER2? ")
+        if finish in 'Yy':
+            col, minimax_score = minimax(board, 7, -math.inf, math.inf, True)
+            print(f"The best column to you play is {col+1}")
 
-	choice = int(input("PLAYER 2 -> Select a column to play (1-7): "))
-	choice -= 1
-	
+        choice = int(input("PLAYER 2 -> Select a column to play (1-7): "))
+        choice -= 1
+        
 
-	if valid_location(board, choice):
-		row = row_empty(board, choice)
-		play(board, row, choice, 2)
-		print(board)
+        if valid_location(board, choice):
+            row = row_empty(board, choice)
+            play(board, row, choice, 2)
+            print(board)
 
-	if check_victory(board, 2):
-		game_over = True
-		print("PLAYER 2 WINS!!!")
-		break
+        if check_victory(board, 2):
+            game_over = True
+            print("PLAYER 2 WINS!!!")
+            break
