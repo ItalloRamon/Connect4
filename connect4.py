@@ -180,35 +180,29 @@ def play(board, row, col, piece):
     board[row][col] = piece
 
 def check_victory(board, piece):
-    #Check victory in all the rows
-    for r in range(ROWS):
-        for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r][c+1]), np.logical_and(board[r][c] == board[r][c+2], board[r][c] == board[r][c+3]) ):
-            if board[r][c] == piece and board[r][c] == board[r][c+1] and board[r][c] == board[r][c+2] and board[r][c] == board[r][c+3]:
-                return True
+    # Check victory in all the rows
+	for c in range(COLS-3):
+		for r in range(ROWS):
+			if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
+				return True
 
-    #Check victory in all the cols
-    for r in range(ROWS-3):
-        for c in range(COLS):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c]), np.logical_and(board[r][c] == board[r+2][c], board[r][c] == board[r+3][c]) ):
-            if board[r][c] == piece and board[r][c] == board[r+1][c] and board[r][c] == board[r+2][c] and board[r][c] == board[r+3][c]:
-                return True
+	# Check victory in all the cols
+	for c in range(COLS):
+		for r in range(ROWS-3):
+			if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
+				return True
 
-    #Check diagonals
-    for r in range(ROWS-3):
-        for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r+1][c+1]), np.logical_and(board[r][c] == board[r+2][c+2], board[r][c] == board[r+3][c+3]) ):
-            if board[r][c] == piece and board[r][c] == board[r+1][c+1] and board[r][c] == board[r+2][c+2] and board[r][c] == board[r+3][c+3]:
-                return True
+	# Check diagonals
+	for c in range(COLS-3):
+		for r in range(ROWS-3):
+			if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
+				return True
+
+	for c in range(COLS-3):
+		for r in range(3, ROWS):
+			if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
+				return True
     
-    for r in range(3, ROWS):
-        for c in range(COLS-3):
-            #if np.logical_and(np.logical_and(board[r][c] == piece, board[r][c] == board[r-1][c+1]), np.logical_and(board[r][c] == board[r-2][c+2], board[r][c] == board[r-3][c+3]) ):
-            if board[r][c] == piece and board[r][c] == board[r-1][c+1] and board[r][c] == board[r-2][c+2] and board[r][c] == board[r-3][c+3]:
-                return True
-
-    return False 
-
 class Game:
     def __init__(self):
         self.initialize_menu()
@@ -219,6 +213,7 @@ class Game:
         pygame.init()
         self.font = pygame.font.SysFont("monospace", 75)
         self.screen = pygame.display.set_mode(size)
+        pygame.display.set_caption("Connect 4")
         self.screen.fill("white")
         self.menu = pygame_menu.Menu('Welcome', 700, 700, theme=pygame_menu.themes.THEME_BLUE)
         self.menu.add.text_input('Name: ', default='Monkey')
@@ -291,11 +286,12 @@ class Game:
             self.turn += 1
             self.turn %= 2
 
-            print(self.board)
+            #print(self.board)
             self.drawBoard()
 
 
     def runGameFriend(self):
+        count_turns = 0
         while not self.gameOver:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -313,14 +309,22 @@ class Game:
                     col = int(math.floor(event.pos[0] / SQUARESIZE))
                     if self.turn == PLAYER:
                         self.dropPiece(PLAYER_PIECE, col, LAWNGRENN)
-
                     else:
                         self.dropPiece(AI_PIECE, col, DEEPPINK)
+                    count_turns += 1
+                
+                if count_turns == 42 and self.gameOver != True:
+                    label = self.font.render(f"Match is DRAW!!", 1, BLACK)
+                    self.screen.blit(label, (40, 10))
+                    self.drawBoard()
+                    self.gameOver = True
+
             if self.gameOver:
                 pygame.time.wait(5000)
        
 
     def runGameAI(self, difficulty=DIFFICULTY[0]):
+        count_turns = 0
         while not self.gameOver:
 
             for event in pygame.event.get():
@@ -342,20 +346,27 @@ class Game:
                         col = int(math.floor(posx/SQUARESIZE))
 
                         self.dropPiece(PLAYER_PIECE, col, LAWNGRENN)
+                        count_turns += 1
+                        
 
             # # Ask for Player 2 Input
             if self.turn == AI and not self.gameOver:               
 
                 #col = random.randint(0, COLUMN_COUNT-1)
                 #col = pick_best_move(board, AI_PIECE)
-                print(difficulty)
+                #print(difficulty)
                 col, minimax_score = minimax(self.board, difficulty, -math.inf, math.inf, True)
 
                 self.dropPiece(AI_PIECE, col, DEEPPINK)
-
+                count_turns += 1
+                
+            if count_turns == 42 and self.gameOver != True:
+                    label = self.font.render(f"Match is DRAW!!", 1, BLACK)
+                    self.screen.blit(label, (40, 10))
+                    self.drawBoard()
+                    self.gameOver = True
+        
             if self.gameOver:
                 pygame.time.wait(5000)
             
-
-
 game = Game()
